@@ -13,7 +13,7 @@
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h6 class="card-title">Purchase List</h6>
+                        <h6 class="card-title">Purchase Order List</h6>
                         <a id="create-new" type="button" class="btn btn-primary float-right"
                             href="{{route('purchases.create')}}">Add Purchase</a>
                         <div class="table-responsive pt-3 px-1">
@@ -24,7 +24,6 @@
                                         <th>Purchase No</th>
                                         <th>Date</th>
                                         <th>Supplier</th>
-                                        <th>Category</th>
                                         <th>Quantity</th>
                                         <th>Product Name</th>
                                         <th>Status</th>
@@ -35,14 +34,14 @@
                                 <tbody>
                                     @foreach($purchases as $index => $purchase)
                                     <tr>
-                                        {{-- {{ dd($product->brand) }} --}}
+                                        
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $purchase->purchase_no }}</td>
                                         <td>{{ $purchase->date }}</td>
                                         <td>{{ $purchase->supplier->supplier_name }}</td>
-                                        <td>{{ $purchase->category->category_name}}</td>
                                         <td>{{ $purchase->buying_quantity}}</td>
                                         <td>{{ $purchase->product->product_name }}</td>
+                                        
                                         <td><span class="btn btn-warning">Pending</span></td>
                                         <td>
                                             {{-- <a class="btn btn-danger"

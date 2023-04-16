@@ -17,7 +17,6 @@ class CreatePurchasesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('supplier_id');
-            $table->unsignedBigInteger('category_id');
             $table->string('purchase_no');
             $table->date('date');
             $table->string('description')->nullable();
@@ -27,7 +26,6 @@ class CreatePurchasesTable extends Migration
             $table->tinyInteger('status')->default('0')->comment('0=Pending,1=Approved');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('created_by');
             $table->integer('updated_by');
 

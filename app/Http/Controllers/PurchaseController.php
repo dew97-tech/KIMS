@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Purchase;
 use App\Models\Product;
-use App\Models\Category;
 use App\Models\Supplier;
 use App\Models\Unit;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use PhpParser\Node\Stmt\Catch_;
 
 class PurchaseController extends Controller
 {
@@ -31,12 +30,18 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        //
         $suppliers = Supplier::all();
         $units = Unit::all();
-        $categories = Category::all();
-        return view('pages.purchases.create', compact('suppliers', 'units', 'categories'));
+        $products = Product::all();
+
+        // get the latest purchase number
+        $last_purchase = Purchase::orderBy('created_at', 'desc')->first();
+        $purchase_no = 'PO-' . date('Ymd') . '-' . sprintf('%03d', $last_purchase ? substr($last_purchase->purchase_no, -3) + 1 : 1);
+
+        return view('pages.purchases.create', compact('suppliers', 'units', 'products', 'purchase_no'));
     }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -46,8 +51,45 @@ class PurchaseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request);
+
+        if ($request->supplier_id == null) {
+            $notification = array(
+                'message' => 'Please select at least one item',
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        } else {
+            $count_products = count($request->product_id);
+            $last_purchase = Purchase::orderBy('id', 'desc')->first(); // Get the latest purchase
+            $serial_no = $last_purchase ? intval(substr($last_purchase->purchase_no, -3)) + 1 : 1; // Generate the next serial number
+
+            for ($i = 0; $i < $count_products; $i++) {
+                $purchase = new Purchase();
+                $purchase->date = $request->date[$i];
+                $purchase->supplier_id = $request->supplier_id[$i];
+                $purchase->product_id = $request->product_id[$i];
+                $purchase->buying_quantity = $request->buying_quantity[$i];
+                $purchase->unit_price = $request->unit_price[$i];
+                $purchase->buying_price = $request->buying_price[$i];
+
+                $purchase_no = 'PO-' . date('Ymd') . '-' . str_pad($serial_no, 3, '0', STR_PAD_LEFT); // Generate the Purchase No
+                $purchase->purchase_no = $purchase_no;
+
+                $purchase->created_by = Auth::user()->id;
+                $purchase->updated_by = Auth::user()->id;
+                $purchase->status = '0';
+                $purchase->save();
+            }
+        }
+
+        $notification = array(
+            'message' => 'Purchase Order Placed Successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('purchases.index')->with($notification);
     }
+
 
     /**
      * Display the specified resource.
