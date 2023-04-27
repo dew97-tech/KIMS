@@ -8,7 +8,7 @@ class Product extends Model
 {
     protected $primaryKey = 'id';
 
-    protected $fillable = ['product_name', 'product_description', 'category_id', 'brand_id', 'unit_id', 'supplier_id', 'product_price'];
+    protected $fillable = ['product_name', 'product_description', 'category_id', 'brand_id', 'unit_id', 'product_price'];
 
     public function category()
     {
@@ -18,11 +18,6 @@ class Product extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class);
-    }
-
-    public function supplier()
-    {
-        return $this->belongsTo(Supplier::class);
     }
 
     public function unit()

@@ -57,7 +57,7 @@
                 </div>
 
                 {{-- Supplier --}}
-                <div class="form-group row">
+                {{-- <div class="form-group row">
                     <label for="product_supplier" class="col-sm-2 col-form-label">Supplier</label>
                     <div class="col-sm-10">
                         <!-- Replace "categories" with your actual categories variable name -->
@@ -73,7 +73,7 @@
                             @endforeach
                         </select>
                     </div>
-                </div>
+                </div> --}}
                 {{-- Brands --}}
                 <div class="form-group row">
                     <label for="product_brand" class="col-sm-2 col-form-label">Brand</label>

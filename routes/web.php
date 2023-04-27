@@ -99,15 +99,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix' => 'purchases', 'as' => 'purchases.'], function () {
         Route::get('/', 'PurchaseController@index')->name('index');
         Route::get('/create', 'PurchaseController@create')->name('create');
+        Route::post('/store', 'PurchaseController@store')->name('store');
+        Route::get('/show/{purchase}', 'PurchaseController@show')->name('show');
+        Route::get('/delete/{purchase}', 'PurchaseController@destroy')->name('destroy');
+        Route::get('/pending', 'PurchaseController@pending')->name('pending');
+        Route::get('/approve/{purchase}', 'PurchaseController@approve')->name('approve');
     });
 
-    // Exclusive Routes
-    // Route::group(['prefix' => 'exclusives', 'as' => 'exclusives.'], function () {
-    //     Route::get('/get-category', 'ExclusiveController@GetCategory')->name('get-category');
-    //     Route::get('/get-product', 'ExclusiveController@GetProduct')->name('get-product');
-    // });
+    // Exclusive Routes only For Making Purchase
     Route::group([], function () {
-        Route::get('/get-category', [ExclusiveController::class, 'GetCategory'])->name('get-category');
         Route::get('/get-product', [ExclusiveController::class, 'GetProduct'])->name('get-product');
         Route::get('/get-supplier/{id}/name', [SupplierController::class, 'getName'])->name('get-supplier');
     });
