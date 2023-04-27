@@ -1,13 +1,9 @@
 @extends('layouts.app')
 
 @push('header-script')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
-    <!-- MDB -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
     <script src="{{ asset('js/handlebars.js') }}"></script>
 @endpush
 
@@ -51,124 +47,119 @@
                                         </select>
                                     </div>
                                 </div>
+                                {{-- Product ID --}}
+                                <div class="col-md-4">
+                                    <div class="md-3">
+                                        <label for="product_id" class="pt-1 form-label font-weight-bold">Product
+                                            Name</label>
+                                        <select id='product_id' name='product_id' class='form-control' required>
+                                            <option value="">Select Product</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {{-- Unit  --}}
+                                <div class="col-md-2">
+                                    <div class="md-3">
+                                        <label for="buying_quantity" class="pt-1 form-label font-weight-bold">Unit (Kg/Pcs/Box)</label>
+                                        <input id="buying_quantity" type="number" min="1"
+                                            class="form-control buying_quantity text-right" name="buying_quantity[]" value="">
+                                    </div>
+                                </div>
+
+                                {{-- Per Unit Cost  --}}
+                                <div class="col-md-2">
+                                    <div class="md-3">
+                                        <label for="unit_price" class="pt-1 form-label font-weight-bold">Cost per
+                                            Unit</label>
+                                        <input id="unit_price" type="number" min="1"
+                                            class="form-control unit_price text-right" name="unit_price[]" value="">
+                                    </div>
+                                </div>
+
+                                {{-- Add More Button --}}
+                                <div class="col-md-4">
+                                    <div class="md-3">
+                                        <label for="example-text-input" class="form-label" style="margin-top:43px"></label>
+
+
+                                        <button class="btn btn-info addeventmore" id="addeventmore">Add More</button>
+                                    </div>
+                                </div>
+
                             </div>
                             {{-- Row End --}}
                         </div>
                         {{-- End Card Body --}}
                         {{-- ------------------------------------------------- --}}
+                        <div class="card-body">
+                            <form action="{{ route('purchases.store') }}" method="post">
+                                @csrf
+                                <table class="table-sm table-bordered" width="100%" style="border-color: #dddddd">
+                                    <thead>
+                                        <tr>
+                                            <th>Supplier</th>
+                                            <th>Product Name</th>
+                                            <th>Unit</th>
+                                            <th>Per Unit Cost</th>
+                                            <th>Cost</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="addRow" class="addRow">
+                                    </tbody>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="4"></td>
+                                            <td>
+                                                <input type="text" name="estimated_amount" value="0.00"
+                                                    id="estimated_amount" class="form-control estimated_amount" readonly
+                                                    style="background-color: #e0fcac;">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-success mt-4" id="storeButton">Purchase Now</button>
+                                </div>
+                            </form>
+                            
+                        </div>
+                        {{-- End Card Body --}}
+
 
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    {{-- Dyanmic Table Row --}}
-    <div class="card border rounded-lg shadow-lg py-2 mx-3">
-        <div class="card-body">
-            <h6 class="card-title">Product List</h6><br>
-            <form action="{{ route('purchases.store') }}" method="post" class="form" enctype="multipart/form-data">
-                @csrf
-                <div class="table-responsive">
-                    <table class="table-sm table-bordered" width="100%" style="border-color: #dddddd">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Product Name</th>
-                                <th class="text-center">Unit</th>
-                                <th class="text-center">Per Unit Cost</th>
-                                <th class="text-center">Cost</th>
-                                <th class="text-center">Add</th>
-                            </tr>
-                        </thead>
-                        <tbody id="addRow" class="addRow">
-                            <tr>
-                                {{-- Product --}}
-                                <td class="dropdown">
-                                    <select id='product_id' name='product_id' class='form-control mdb-select'>
-                                        <option value="">Select Products</option>
-                                        @foreach ($products as $product)
-                                            <option value="{{ $product->id }}">{{ $product->product_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                {{-- Unit --}}
-                                <td class="text-center">
-                                    <input id="buying_quantity" type="number"
-                                        class="form-control buying_quantity text-right" name="buying_quantity[]">
-                                </td>
-                                {{-- Per Unit Cost --}}
-                                <td class="text-center">
-                                    <input id="unit_price" type="number" class="form-control unit_price text-right"
-                                        name="unit_price[]">
-                                </td>
-                                {{-- Buying Price/Cost --}}
-                                <td class="text-center">
-                                    <input type="number" class="form-control buying_price" id="buying_price"
-                                        placeholder="0.00" name="buying_price[]" value="@{{ buying_price }}" readonly>
-                                </td>
-                                <td class="d-flex justify-content-center align-items-center">
-                                    <button type="button" class="btn btn-primary addeventmore rounded-pill"
-                                        id="addeventmore">
-                                        <i class="fa-solid fa-circle-plus fa-2x"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="3" class="p-3 text-right font-weight-bold">Total Cost:</td>
-                                <td class="p-3 text-left">
-                                    <input type="text" name="estimated_amount" value="0.00" id="estimated_amount"
-                                        class="form-control estimated_amount bg-light" readonly>
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <div class="form-group my-2">
-                    <button type="submit" class="btn btn-success mt-4" id="storeButton">Purchase Now</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('.mdb-select').materialSelect({
-                search: true
-            });
-        });
-    </script>
-
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script id="document-template" type="text/x-handlebars-template">
         <tr class="delete_add_more_item" id="delete_add_more_item">
             <input type="hidden" name="date[]"  value="@{{ date }}">
             <input type="hidden" name="purchase_no[]"  value="@{{ purchase_no }}">
-            <input type="hidden" name="supplier_id[]"  value="@{{ supplier_id }}">
-            <td class="text-center font-bold">
-                <input type="hidden" name="product_id_val[]" value="@{{ product_id_val }}">@{{ product_name }}
+              
+            <td>
+                <input type="hidden" name="supplier_id[]" value="@{{ supplier_id }}">@{{ supplier_name }}
             </td>
-            <td class="text-center">
-                <input type="number" min="1" class="form-control form-control text-center buying_quantity"
-                    name="buying_quantity_val[]" value="@{{ buying_quantity_val }}" readonly>
+            <td>
+                <input type="hidden" name="product_id[]" value="@{{ product_id }}">@{{ product_name }}
             </td>
-            <td class="text-center">
-                <input type="number" min="1" class="form-control form-control text-center unit_price" name="unit_price_val[]"
-                    value="@{{ unit_price_val }}" readonly>
+            <td>
+                <input type="number" min="1" class="form-control form-control-sm text-right buying_quantity"
+                    name="buying_quantity[]" value="@{{ buying_quantity }}">
             </td>
-            <td class="text-center">
-                <input type="number" class="form-control text-center buying_price" id="buying_price" name="buying_price_val[]" value="@{{ buying_price_val }}" readonly>
+            <td>
+                <input type="number" min="1" class="form-control form-control-sm text-right unit_price" name="unit_price[]"
+                    value="@{{ unit_price }}">
             </td>
-            <td class="text-center" colspan="2">
-                <button type="button" class="btn btn-danger removeeventmore" id="removeeventmore"><i class="fa-regular fa-trash-can fa-xl"></i></button>
+            <td>
+                <input type="number" class="form-control buying_price" id="buying_price" name="buying_price[]" value="@{{ buying_price }}" readonly>
+            </td>
+            <td>
+                <i class="btn btn-danger far fa-trash-alt removeeventmore"></i>
+                
             </td>
         </tr>
     </script>
@@ -177,6 +168,7 @@
     {{-- AddMore Button Event Trigger --}}
     <script type="text/javascript">
         $(document).ready(function() {
+            var counter = 0;
             $(document).on("click", ".addeventmore", function() {
                 var date = $('#date').val();
                 var purchase_no = $('#purchase_no').val();
@@ -187,13 +179,7 @@
                 var unit_price = $('#unit_price').val();
                 var buying_quantity = $('#buying_quantity').val();
                 var buying_price = (unit_price * buying_quantity).toFixed(2);
-
-                // Store the values of input fields in separate variables
-                var unit_price_val = unit_price;
-                var buying_quantity_val = buying_quantity;
-                var buying_price_val = buying_price;
-                var product_id_val = product_id;
-                console.log(buying_quantity_val);
+                counter++;
                 if (date == '') {
                     $.notify("Date is Required", {
                         globalPosition: 'top right',
@@ -223,7 +209,7 @@
                     return false;
                 }
                 if (buying_quantity == '') {
-                    $.notify("Buying Quantity Field is Required", {
+                    $.notify("Unit Field is Required", {
                         globalPosition: 'top right',
                         className: 'error'
                     });
@@ -243,32 +229,20 @@
                     purchase_no: purchase_no,
                     supplier_id: supplier_id,
                     supplier_name: supplier_name,
-                    product_id_val: product_id_val,
+                    product_id: product_id,
                     product_name: product_name,
-                    unit_price_val: unit_price_val,
-                    buying_quantity_val: buying_quantity_val,
-                    buying_price_val: buying_price_val
+                    unit_price: unit_price,
+                    buying_quantity: buying_quantity,
+                    buying_price: buying_price
                 };
                 var html = tamplate(data);
-                console.log(data);
                 $("#addRow").append(html);
                 $('#unit_price').val('');
                 $('#buying_quantity').val('');
-                $('#buying_price').val('');
-                $('#product_id').val('');
-
             });
 
             $(document).on("click", ".removeeventmore", function(event) {
                 $(this).closest(".delete_add_more_item").remove();
-                totalAmountPrice();
-            });
-            $(document).on("keyup click", '.unit_price,.buying_quantity', function() {
-                var unit_price = $(this).closest("tr").find("input.unit_price").val();
-
-                var qty = $(this).closest("tr").find("input.buying_quantity").val();
-                buying_price = unit_price * qty;
-                $(this).closest("tr").find("input.buying_price").val(buying_price.toFixed(2));
                 totalAmountPrice();
             });
             $(document).ready(function() {
@@ -285,6 +259,16 @@
                 });
             });
 
+
+            $(document).on("keyup click", '.unit_price,.buying_quantity', function() {
+                var unit_price = $(this).closest("tr").find("input.unit_price").val();
+                var qty = $(this).closest("tr").find("input.buying_quantity").val();
+                buying_price = unit_price * qty;
+                $(this).closest("tr").find("input.buying_price").val(buying_price.toFixed(2));
+                totalAmountPrice();
+            });
+
+
             function totalAmountPrice() {
                 var sum = 0;
                 $(".buying_price").each(function() {
@@ -298,7 +282,29 @@
         });
     </script>
 
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    {{-- For Getting Products --}}
+    <script type="text/javascript">
+        $(function() {
+            $(document).on('change', '#supplier_id', function() {
+                var supplier_id = $(this).val();
+                $.ajax({
+                    url: "{{ route('get-product') }}",
+                    type: "GET",
+                    data: {supplier_id: supplier_id},
+                    success: function(data) {
+                        var html = '<option value="">Select Product</option>';
+                        $.each(data, function(key, v) {
+                            html += '<option value=" ' + v.id + ' "> ' + v.product_name + '</option>';
+                        });
+                        $('#product_id').html(html);
+                    }
+                })
+            });
+        });
+    </script>
 @endsection
 
 @push('plugin-scripts')
@@ -306,6 +312,4 @@
     <script src="{{ asset('js/handlebars.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
-    <!-- MDB -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
 @endpush

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Supplier;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 
@@ -32,8 +31,7 @@ class ProductController extends Controller
         $categories = Category::all();
         $brands = Brand::all();
         $units = Unit::all();
-        $suppliers = Supplier::all();
-        return view('pages.products.create', compact('categories', 'brands', 'units', 'suppliers'));
+        return view('pages.products.create', compact('categories', 'brands', 'units'));
     }
 
     /**
@@ -52,7 +50,6 @@ class ProductController extends Controller
             'unit_id' => $request['product_unit'],
             'category_id' => $request['product_category'],
             'brand_id' => $request['product_brand'],
-            'supplier_id' => $request['product_supplier']
         ]);
 
         return redirect()->route('products.index')->with('success', 'Product Added Successfully!');
@@ -81,8 +78,7 @@ class ProductController extends Controller
         $categories = Category::all();
         $brands = Brand::all();
         $units = Unit::all();
-        $suppliers = Supplier::all();
-        return view('pages.products.edit', compact('product', 'categories', 'brands', 'units', 'suppliers'));
+        return view('pages.products.edit', compact('product', 'categories', 'brands', 'units'));
     }
 
     /**
@@ -102,7 +98,6 @@ class ProductController extends Controller
         $product->unit_id = $request['product_unit'];
         $product->category_id = $request['product_category'];
         $product->brand_id = $request['product_brand'];
-        $product->supplier_id = $request['product_supplier'];
 
         $product->save();
 

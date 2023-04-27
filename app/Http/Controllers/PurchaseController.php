@@ -18,10 +18,32 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        //
-        $purchases = Purchase::orderBy('date', 'desc')->orderBy('id', 'desc')->get();
+        $unique_purchases = [];
+
+        $allPurchases = Purchase::orderBy('date', 'desc')->orderBy('id', 'desc')->get();
+
+        foreach ($allPurchases as $purchase) {
+            if (!in_array($purchase->purchase_no, $unique_purchases)) {
+                $unique_purchases[] = $purchase->purchase_no;
+            }
+        }
+
+        $purchases = [];
+        foreach ($unique_purchases as $unique_purchase) {
+            $latest_purchase = Purchase::where('purchase_no', $unique_purchase)
+                ->orderBy('date', 'desc')
+                ->first();
+            // move the check for purchase status here
+            if ($latest_purchase->status == '1' || $latest_purchase->status == '0') {
+                array_push($purchases, $latest_purchase);
+            }
+        }
+
+
         return view('pages.purchases.index', compact('purchases'));
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -60,7 +82,7 @@ class PurchaseController extends Controller
             );
             return redirect()->back()->with($notification);
         } else {
-            $count_products = count($request->product_id);
+            $count_products = count($request->product_id_val);
             $last_purchase = Purchase::orderBy('id', 'desc')->first(); // Get the latest purchase
             $serial_no = $last_purchase ? intval(substr($last_purchase->purchase_no, -3)) + 1 : 1; // Generate the next serial number
 
@@ -68,10 +90,10 @@ class PurchaseController extends Controller
                 $purchase = new Purchase();
                 $purchase->date = $request->date[$i];
                 $purchase->supplier_id = $request->supplier_id[$i];
-                $purchase->product_id = $request->product_id[$i];
-                $purchase->buying_quantity = $request->buying_quantity[$i];
-                $purchase->unit_price = $request->unit_price[$i];
-                $purchase->buying_price = $request->buying_price[$i];
+                $purchase->product_id = $request->product_id_val[$i];
+                $purchase->buying_quantity = $request->buying_quantity_val[$i];
+                $purchase->unit_price = $request->unit_price_val[$i];
+                $purchase->buying_price = $request->buying_price_val[$i];
 
                 $purchase_no = 'PO-' . date('Ymd') . '-' . str_pad($serial_no, 3, '0', STR_PAD_LEFT); // Generate the Purchase No
                 $purchase->purchase_no = $purchase_no;
@@ -97,9 +119,17 @@ class PurchaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($purchase_no)
     {
         //
+        $purchases = [];
+        $allPurchases = Purchase::where('purchase_no', $purchase_no)->get();
+        foreach ($allPurchases as $purchase) {
+            if ($purchase->status == '0') {
+                array_push($purchases, $purchase);
+            }
+        }
+        return view('pages.purchases.view', compact('purchases'));
     }
 
     /**
@@ -134,5 +164,29 @@ class PurchaseController extends Controller
     public function destroy($id)
     {
         //
+        $purchase = Purchase::find($id);
+        $purchase->delete();
+        return redirect()->route('purchases.index')->with('success', 'Purchases Removed Successfully!');
+    }
+    public function pending()
+    {
+        // 
+        $purchases = Purchase::orderBy('date', 'desc')->orderBy('id', 'desc')->where('status', '0')->get();
+        return view('pages.purchases.pending', compact('purchases'));
+    }
+    public function approve($id)
+    {
+        // 
+        // Getting the Purchase and we get the product and increament the proudtc quantity by buying_quantity
+        $purchase = Purchase::find($id);
+        $purchases = Purchase::orderBy('date', 'desc')->orderBy('id', 'desc')->get();
+        // $purchases = Purchase::orderBy('date', 'desc')->orderBy('id', 'desc')->where('status', '0')->get();
+        $product = Product::where('id', $purchase->product_id)->first();
+        $purchase_quantity = (($purchase->buying_quantity)) + (($product->quantity));
+        $product->quantity = $purchase_quantity;
+        $product->save();
+        // dd($product);
+        Purchase::find($id)->update(['status' => '1']);
+        return view('pages.purchases.index', compact('purchases'));
     }
 }

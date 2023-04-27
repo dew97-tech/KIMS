@@ -7,12 +7,12 @@
 
 <div class="c-sidebar-brand">
     <a href="{{ route('home') }}">
-        <img class="c-sidebar-brand-full" src="{{ asset('assets/img/bopinc_logo.png') }}" height="46"
+        <img class="c-sidebar-brand-full" src="{{ asset('assets/img/kandari_logo.png') }}" height="70"
             alt="Augmenta Logo">
     </a>
     <a href="{{ route('home') }}">
-        <img class="c-sidebar-brand-minimized" src="{{ asset('assets/img/bopinc_logo.png') }}"
-            href="{{ route('home') }}" height="46" alt="Augmenta Logo">
+        <img class="c-sidebar-brand-minimized" src="{{ asset('assets/img/kandari_logo.png') }}"
+            href="{{ route('home') }}" height="70" alt="Augmenta Logo">
     </a>
 </div>
 <ul class="c-sidebar-nav my-2">

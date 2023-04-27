@@ -18,15 +18,14 @@ class CreateProductsTable extends Migration
             $table->string('product_name');
             $table->text('product_description')->nullable();
             $table->float('product_price');
+            $table->double('quantity')->default('0');
             $table->unsignedBigInteger('unit_id');
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('brand_id');
-            $table->unsignedBigInteger('supplier_id');
 
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

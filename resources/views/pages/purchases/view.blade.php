@@ -13,11 +13,11 @@
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h6 class="card-title">Purchase Order List</h6>
-                        <a id="create-new" type="button" class="btn btn-primary float-right"
+                        <h6 class="card-title">Products with same Purchase_NO</h6>
+                        {{-- <a id="create-new" type="button" class="btn btn-primary float-right"
                             href="{{route('purchases.create')}}">Add Purchase</a>
                         <a id="create-new" type="button" class="btn btn-info float-right mx-3"
-                            href="{{route('purchases.pending')}}">Approve Purchase</a>
+                            href="{{route('purchases.pending')}}">Approve Purchase</a> --}}
                         <div class="table-responsive pt-3 px-1">
                             <table class="table table-bordered" id="myTable">
                                 <thead>
@@ -28,8 +28,8 @@
                                         <th>Supplier</th>
                                         <th>Quantity</th>
                                         <th>Product Name</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
+                                        {{-- <th>Status</th>
+                                        <th>Actions</th> --}}
                                     </tr>
                                 </thead>
 
@@ -44,26 +44,26 @@
                                         <td>{{ $purchase->buying_quantity}}</td>
                                         <td>{{ $purchase->product->product_name }}</td>
                                         
-                                        <td>
+                                        {{-- <td>
                                             @if($purchase->status == '0')
                                             <span class="btn btn-warning">Pending</span>
                                             @elseif ($purchase->status =='1')
                                             <span class="btn btn-success">Approved</span>
                                             @endif
-                                        </td>
-                                        <td>
+                                        </td> --}}
+                                        {{-- <td>
                                             @if($purchase->status == '0')
-                                            <a class="btn btn-danger float-left"
+                                            <a class="btn btn-danger"
                                                 href="{{ route('purchases.destroy', $purchase->id) }}"
                                                 onclick="return confirm('Are you sure?')">
                                                 <span class="glyphicon glyphicon-trash">Delete</span>
                                             </a>
                                             @endif
-                                            <a class="btn btn-primary float-right"
-                                                href="{{ route('purchases.show', $purchase->purchase_no) }}">
+                                            <a class="btn btn-primary"
+                                                href="{{ route('purchases.view', $purchase->purchase_no) }}">
                                                 <span class="glyphicon glyphicon-trash">View</span>
                                             </a>
-                                        </td>
+                                        </td> --}}
                                     </tr>
                                     @endforeach
                                 </tbody>

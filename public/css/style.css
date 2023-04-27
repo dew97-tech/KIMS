@@ -12910,7 +12910,8 @@ html:not([dir="rtl"]) .c-sidebar.c-sidebar-show.c-sidebar-right {
 
 .c-sidebar {
     color: #fff;
-    background: #f4db27;
+    background: #C7F3FF;
+    /* background: #f4db27; */
     /* background: #0c838c; */
 }
 
@@ -12992,7 +12993,8 @@ html:not([dir="rtl"]) .c-sidebar.c-sidebar-show.c-sidebar-right {
     .c-sidebar .c-sidebar-nav-link:hover,
     .c-sidebar .c-sidebar-nav-dropdown-toggle:hover {
         color: #000;
-        background: #f4db27;
+        background:#BCE3EE;
+        /* background: #f4db27; */
     }
 
     .c-sidebar .c-sidebar-nav-link:hover .c-sidebar-nav-icon,
