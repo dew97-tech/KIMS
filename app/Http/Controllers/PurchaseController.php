@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Purchase;
 use App\Models\Product;
 use App\Models\Supplier;
+use App\Models\Stock;
 use App\Models\Unit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -18,29 +19,13 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        $unique_purchases = [];
 
-        $allPurchases = Purchase::orderBy('date', 'desc')->orderBy('id', 'desc')->get();
-
-        foreach ($allPurchases as $purchase) {
-            if (!in_array($purchase->purchase_no, $unique_purchases)) {
-                $unique_purchases[] = $purchase->purchase_no;
-            }
-        }
-
-        $purchases = [];
-        foreach ($unique_purchases as $unique_purchase) {
-            $latest_purchase = Purchase::where('purchase_no', $unique_purchase)
-                ->orderBy('date', 'desc')
-                ->first();
-            // move the check for purchase status here
-            if ($latest_purchase->status == '1' || $latest_purchase->status == '0') {
-                array_push($purchases, $latest_purchase);
-            }
-        }
-
+        $purchases = Purchase::where('status', 1)
+            ->orderBy('date', 'desc')
+            ->get();
 
         return view('pages.purchases.index', compact('purchases'));
+
     }
 
 
@@ -109,7 +94,7 @@ class PurchaseController extends Controller
             'message' => 'Purchase Order Placed Successfully',
             'alert-type' => 'success'
         );
-        return redirect()->route('purchases.index')->with($notification);
+        return redirect()->route('purchases.pending')->with($notification);
     }
 
 
@@ -122,13 +107,13 @@ class PurchaseController extends Controller
     public function show($purchase_no)
     {
         //
-        $purchases = [];
-        $allPurchases = Purchase::where('purchase_no', $purchase_no)->get();
-        foreach ($allPurchases as $purchase) {
-            if ($purchase->status == '0') {
-                array_push($purchases, $purchase);
-            }
-        }
+        // $purchases = [];
+        $purchases = Purchase::where('purchase_no', $purchase_no)->get();
+        // foreach ($allPurchases as $purchase) {
+        //     if ($purchase->status == '0') {
+        //         array_push($purchases, $purchase);
+        //     }
+        // }
         return view('pages.purchases.view', compact('purchases'));
     }
 
@@ -170,23 +155,52 @@ class PurchaseController extends Controller
     }
     public function pending()
     {
-        // 
+        //
         $purchases = Purchase::orderBy('date', 'desc')->orderBy('id', 'desc')->where('status', '0')->get();
         return view('pages.purchases.pending', compact('purchases'));
     }
     public function approve($id)
     {
-        // 
-        // Getting the Purchase and we get the product and increament the proudtc quantity by buying_quantity
+
         $purchase = Purchase::find($id);
-        $purchases = Purchase::orderBy('date', 'desc')->orderBy('id', 'desc')->get();
-        // $purchases = Purchase::orderBy('date', 'desc')->orderBy('id', 'desc')->where('status', '0')->get();
+
+        // Update purchase status
+        $purchase->update(['status' => '1']);
+
+        // Get related product and supplier
         $product = Product::where('id', $purchase->product_id)->first();
-        $purchase_quantity = (($purchase->buying_quantity)) + (($product->quantity));
-        $product->quantity = $purchase_quantity;
-        $product->save();
-        // dd($product);
-        Purchase::find($id)->update(['status' => '1']);
-        return view('pages.purchases.index', compact('purchases'));
+        $supplier = Supplier::where('id', $purchase->supplier_id)->first();
+
+        // Check if stock record exists
+        $stock = Stock::where('product_id', $product->id)
+            ->where('supplier_id', $supplier->id)
+            ->first();
+
+        if ($stock) {
+            // Update existing stock record
+            $stock->in_quantity += $purchase->buying_quantity;
+            $stock->remaining_quantity += $purchase->buying_quantity;
+            $stock->update();
+
+        } else {
+            // Create new stock record
+            $stock = new Stock;
+            $stock->product_id = $product->id;
+            $stock->supplier_id = $supplier->id;
+            $stock->unit_id = $product->unit_id;
+            $stock->category_id = $product->category_id;
+            $stock->in_quantity = $purchase->buying_quantity;
+            $stock->remaining_quantity = $product->quantity + $purchase->buying_quantity;
+            $stock->save();
+        }
+
+        // Update product quantity
+        $product_quantity = $product->quantity + $purchase->buying_quantity;
+        $product->update(['quantity' => $product_quantity]);
+
+
+        // Redirect back
+        return redirect()->route('purchases.index');
+
     }
 }

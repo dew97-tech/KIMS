@@ -106,10 +106,10 @@
                                     <input type="number" class="form-control buying_price" id="buying_price"
                                         placeholder="0.00" name="buying_price[]" value="@{{ buying_price }}" readonly>
                                 </td>
-                                <td class="d-flex justify-content-center align-items-center">
-                                    <button type="button" class="btn btn-primary addeventmore rounded-pill"
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-md btn-primary addeventmore rounded-pill"
                                         id="addeventmore">
-                                        <i class="fa-solid fa-circle-plus fa-2x"></i>
+                                        <i class="fa-solid fa-circle-plus fa-xl mb-0 mt-0 pt-1"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -168,7 +168,7 @@
                 <input type="number" class="form-control text-center buying_price" id="buying_price" name="buying_price_val[]" value="@{{ buying_price_val }}" readonly>
             </td>
             <td class="text-center" colspan="2">
-                <button type="button" class="btn btn-danger removeeventmore" id="removeeventmore"><i class="fa-regular fa-trash-can fa-xl"></i></button>
+                <button type="button" class="btn btn-md btn-danger removeeventmore py-2" id="removeeventmore"><i class="fa-regular fa-trash-can fa-xl mt-0 mb-0 pt-1"></i></button>
             </td>
         </tr>
     </script>

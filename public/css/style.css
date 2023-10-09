@@ -12970,13 +12970,13 @@ html:not([dir="rtl"]) .c-sidebar.c-sidebar-show.c-sidebar-right {
 
 .c-sidebar .c-sidebar-nav-link .c-sidebar-nav-icon,
 .c-sidebar .c-sidebar-nav-dropdown-toggle .c-sidebar-nav-icon {
-    color: #808080;
+    color: lightslategray;
 }
 
 .c-sidebar .c-sidebar-nav-link.c-active,
 .c-sidebar .c-active.c-sidebar-nav-dropdown-toggle {
-    color: #000;
-    background: rgba(255, 255, 255, 0.05);
+    color: black;
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .c-sidebar .c-sidebar-nav-link.c-active .c-sidebar-nav-icon,
@@ -12999,7 +12999,7 @@ html:not([dir="rtl"]) .c-sidebar.c-sidebar-show.c-sidebar-right {
 
     .c-sidebar .c-sidebar-nav-link:hover .c-sidebar-nav-icon,
     .c-sidebar .c-sidebar-nav-dropdown-toggle:hover .c-sidebar-nav-icon {
-        color: #fff;
+        color: black;
     }
 
     .c-sidebar .c-sidebar-nav-link:hover.c-sidebar-nav-dropdown-toggle::after,

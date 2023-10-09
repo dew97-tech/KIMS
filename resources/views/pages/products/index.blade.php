@@ -7,28 +7,28 @@
 @endpush
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row justify-content-md-center">
-            <div class="col-md-11">
+    <div class="container">
+        <div class="row justify-content-lg-center">
+            <div class="col-lg-10 col-md-12 col-sm-12">
                 <div class="card">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Product List</h6>
+                        <a id="create-new" type="button" class="btn btn-primary float-right"
+                            href="{{ route('products.create') }}">Add New Product</a>
+                    </div>
                     <div class="card-body">
-                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-primary">
-                            <h6 class="m-0 font-weight-bold text-white">Product List</h6>
-                            <a id="create-new" type="button" class="btn btn-light float-right"
-                                href="{{ route('products.create') }}">Add New Product</a>
-                        </div>
                         <div class="table-responsive pt-3 px-1">
-                            <table class="table table-bordered table-hover" id="myTable">
+                            <table class="table table-bordered border-secondary cell-border" id="myTable">
                                 <thead>
-                                    <tr class="text-center">
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Description</th>
-                                        <th>Price</th>
-                                        <th>Category</th>
-                                        <th>Brand</th>
-                                        <th>Unit</th>
-                                        <th>Actions</th>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Category</th>
+                                        <th scope="col">Brand</th>
+                                        <th scope="col">Unit</th>
+                                        <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
 
@@ -38,19 +38,23 @@
                                             {{-- {{ dd($product->brand) }} --}}
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ $product->product_name }}</td>
-                                            <td>{{ $product->product_description }}</td>
+                                            <td>{{ $product->product_description }}
+                                            </td>
                                             <td>{{ $product->product_price }}</td>
-                                            <td>{{ $product->category->category_name }}</td>
-                                            <td>{{ $product->brand->brand_name }}</td>
-                                            <td>{{ $product->unit->unit_shortform }}</td>
+                                            <td>
+                                                {{ $product->category->category_name }}</td>
+                                            <td>{{ $product->brand->brand_name }}
+                                            </td>
+                                            <td>
+                                                {{ $product->unit->unit_shortform }}</td>
                                             <td class="text-center">
-                                                <a class="btn btn-sm btn-primary mx-2"
+                                                <a class="btn btn-sm btn-warning mx-2 py-2"
                                                     href="{{ route('products.edit', $product->id) }}">
-                                                    <i class="fas fa-edit"></i>
+                                                    {{-- <i class="fas fa-edit"></i> --}}Edit
                                                 </a>
-                                                <a class="btn btn-sm btn-danger mx-2"
+                                                <a class="btn btn-sm btn-danger mx-2 py-2"
                                                     href="{{ route('products.destroy', $product->id) }}">
-                                                    <i class="fas fa-trash"></i>
+                                                    {{-- <i class="fas fa-trash"></i> --}}Delete
                                                 </a>
                                             </td>
                                         </tr>

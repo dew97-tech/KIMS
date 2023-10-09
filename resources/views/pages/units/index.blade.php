@@ -8,20 +8,20 @@
 
 
 @section('content')
-    <div id="learnings">
+    <div id="learnings" class="container">
         <div class="row justify-content-md-center">
             <div class="col-md-10">
-                <div class="card">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-primary">
-                        <h6 class="m-0 font-weight-bold text-white">Units</h6>
-                        <a id="create-new" type="button" class="btn btn-light float-right"
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Unit List</h6>
+                        <a id="create-new" type="button" class="btn btn-primary float-right"
                             href="{{ route('units.create') }}">Add New Unit</a>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover" style="width: 99%" id="myTable">
+                        <div class="table-responsive pt-3 px-1">
+                            <table class="table table-bordered cell-border" id="myTable">
                                 <thead>
-                                    <tr class="text-center">
+                                    <tr>
                                         <th>#</th>
                                         <th>Unit Name</th>
                                         <th>Unit Shortform</th>
@@ -30,19 +30,25 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($units as $index => $unit)
-                                        <tr class="text-center">
+                                        <tr>
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ $unit->unit_name }}</td>
                                             <td>{{ $unit->unit_shortform }}</td>
                                             <td class="d-flex justify-content-center">
-                                                <a class="btn btn-sm btn-warning mr-2"
+                                                <a class="btn btn-sm btn-warning mx-2 py-2"
                                                     href="{{ route('units.edit', $unit->id) }}">Edit</a>
-                                                <form action="{{ route('units.destroy', $unit->id) }}" method="POST"
+                                                {{-- <form action="{{ route('units.destroy', $unit->id) }}" method="POST"
                                                     onsubmit="return confirm('Are you sure?')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button class="btn btn-sm btn-danger" type="submit">Delete</button>
-                                                </form>
+                                                </form> --}}
+                                                <a class="btn btn-danger btn-sm mx-2 py-2"
+                                                    href="{{ route('units.destroy', $unit->id) }}"
+                                                    onclick="return confirm('Are you sure?')">
+                                                    <span class="glyphicon glyphicon-trash">Delete</span>
+                                                </a>
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach

@@ -12,13 +12,13 @@
             <div class="col-md-10">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Brands</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Brand List</h6>
                         <a id="create-new" type="button" class="btn btn-primary float-right"
                             href="{{ route('brands.create') }}">Add New Brand</a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive pt-3 px-1">
-                            <table class="table table-bordered table-hover" id="myTable">
+                            <table class="table table-bordered cell-border" id="myTable">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -33,13 +33,13 @@
                                             {{-- {{ dd($product->brand) }} --}}
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ $brand->brand_name }}</td>
-                                            <td>
+                                            <td class="text-center">
 
-                                                <a class="btn btn-primary btn-sm"
+                                                <a class="btn btn-warning btn-sm mx-2 py-2"
                                                     href="{{ route('brands.edit', $brand->id) }}">
                                                     <span class="glyphicon glyphicon-edit">Edit</span>
                                                 </a>
-                                                <a class="btn btn-danger btn-sm"
+                                                <a class="btn btn-danger btn-sm mx-2 py-2"
                                                     href="{{ route('brands.destroy', $brand->id) }}"
                                                     onclick="return confirm('Are you sure?')">
                                                     <span class="glyphicon glyphicon-trash">Delete</span>
