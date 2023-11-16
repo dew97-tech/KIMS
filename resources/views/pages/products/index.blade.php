@@ -1,20 +1,20 @@
-@extends('layouts.app')
+@extends("layouts.app")
 
-@section('title', 'Products')
+@section("title", "Products")
 
-@push('plugin-styles')
+@push("plugin-styles")
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.css">
 @endpush
 
-@section('content')
+@section("content")
     <div class="container">
         <div class="row justify-content-lg-center">
             <div class="col-lg-10 col-md-12 col-sm-12">
                 <div class="card">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Product List</h6>
+                        <h4 class="m-0 font-weight-bold text-primary">Product List</h4>
                         <a id="create-new" type="button" class="btn btn-primary float-right"
-                            href="{{ route('products.create') }}">Add New Product</a>
+                            href="{{ route("products.create") }}">Add New Product</a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive pt-3 px-1">
@@ -23,7 +23,8 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Name</th>
-                                        <th scope="col">Description</th>
+                                        {{-- <th scope="col">Description</th> --}}
+                                        <th scope="col">Cost</th>
                                         <th scope="col">Price</th>
                                         <th scope="col">Category</th>
                                         <th scope="col">Brand</th>
@@ -38,8 +39,9 @@
                                             {{-- {{ dd($product->brand) }} --}}
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ $product->product_name }}</td>
-                                            <td>{{ $product->product_description }}
-                                            </td>
+                                            {{-- <td>{{ $product->product_description }}
+                                            </td> --}}
+                                            <td>{{ $product->product_cost }}</td>
                                             <td>{{ $product->product_price }}</td>
                                             <td>
                                                 {{ $product->category->category_name }}</td>
@@ -49,11 +51,11 @@
                                                 {{ $product->unit->unit_shortform }}</td>
                                             <td class="text-center">
                                                 <a class="btn btn-sm btn-warning mx-2 py-2"
-                                                    href="{{ route('products.edit', $product->id) }}">
+                                                    href="{{ route("products.edit", $product->id) }}">
                                                     {{-- <i class="fas fa-edit"></i> --}}Edit
                                                 </a>
                                                 <a class="btn btn-sm btn-danger mx-2 py-2"
-                                                    href="{{ route('products.destroy', $product->id) }}">
+                                                    href="{{ route("products.destroy", $product->id) }}">
                                                     {{-- <i class="fas fa-trash"></i> --}}Delete
                                                 </a>
                                             </td>
@@ -70,9 +72,9 @@
 @endsection
 
 
-@push('plugin-scripts')
+@push("plugin-scripts")
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.js"></script>
 
     <script>
@@ -82,6 +84,6 @@
     </script>
 @endpush
 
-@push('custom-scripts')
+@push("custom-scripts")
     <!-- Custom js here -->
 @endpush

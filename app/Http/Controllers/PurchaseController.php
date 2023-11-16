@@ -8,7 +8,10 @@ use App\Models\Supplier;
 use App\Models\Stock;
 use App\Models\Unit;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
 
 class PurchaseController extends Controller
 {
@@ -17,12 +20,11 @@ class PurchaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
 
-        $purchases = Purchase::where('status', 1)
-            ->orderBy('date', 'desc')
-            ->get();
+        $purchases = Purchase::orderBy('date', 'desc')->orderBy('id', 'desc')->get();
+
 
         return view('pages.purchases.index', compact('purchases'));
 
@@ -35,7 +37,7 @@ class PurchaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): View
     {
         $suppliers = Supplier::all();
         $units = Unit::all();
@@ -56,9 +58,9 @@ class PurchaseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        // dd($request);
+        // dd($request->all());
 
         if ($request->supplier_id == null) {
             $notification = array(
@@ -94,7 +96,7 @@ class PurchaseController extends Controller
             'message' => 'Purchase Order Placed Successfully',
             'alert-type' => 'success'
         );
-        return redirect()->route('purchases.pending')->with($notification);
+        return redirect()->route('purchases.index')->with($notification);
     }
 
 
@@ -104,7 +106,7 @@ class PurchaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($purchase_no)
+    public function show($purchase_no): View
     {
         //
         // $purchases = [];
@@ -146,12 +148,21 @@ class PurchaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request): RedirectResponse
     {
-        //
         $purchase = Purchase::find($id);
-        $purchase->delete();
-        return redirect()->route('purchases.index')->with('success', 'Purchases Removed Successfully!');
+        if ($purchase) {
+            $totalPurchases = Purchase::count();
+            if ($totalPurchases == 1) {
+                $purchase->delete();
+                return redirect()->route('purchases.index')->with('success', 'Purchase removed successfully!');
+            } else {
+                $purchase->delete();
+                return redirect()->back()->with('success', 'Purchase removed successfully!')->withInput($request->all());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Purchase not found!');
+        }
     }
     public function pending()
     {
@@ -159,7 +170,8 @@ class PurchaseController extends Controller
         $purchases = Purchase::orderBy('date', 'desc')->orderBy('id', 'desc')->where('status', '0')->get();
         return view('pages.purchases.pending', compact('purchases'));
     }
-    public function approve($id)
+    // Approve purchase with ID
+    public function approve($id): RedirectResponse
     {
 
         $purchase = Purchase::find($id);
@@ -203,4 +215,52 @@ class PurchaseController extends Controller
         return redirect()->route('purchases.index');
 
     }
+    // Approve all purchases under a specific purchase_no
+    public function approveAll($purchase_no): RedirectResponse
+    {
+        // Update all pending purchases under the specified purchase_no to approved
+        Purchase::where('purchase_no', $purchase_no)
+            ->where('status', '0')
+            ->update(['status' => '1']);
+
+        // Update stock and product quantities for all approved purchases
+        $purchases = Purchase::where('purchase_no', $purchase_no)
+            ->where('status', '1')
+            ->get();
+        foreach ($purchases as $purchase) {
+            $product = Product::where('id', $purchase->product_id)->first();
+            $supplier = Supplier::where('id', $purchase->supplier_id)->first();
+
+            // Check if stock record exists
+            $stock = Stock::where('product_id', $product->id)
+                ->where('supplier_id', $supplier->id)
+                ->first();
+
+            if ($stock) {
+                // Update existing stock record
+                $stock->in_quantity += $purchase->buying_quantity;
+                $stock->remaining_quantity += $purchase->buying_quantity;
+                $stock->update();
+
+            } else {
+                // Create new stock record
+                $stock = new Stock;
+                $stock->product_id = $product->id;
+                $stock->supplier_id = $supplier->id;
+                $stock->unit_id = $product->unit_id;
+                $stock->category_id = $product->category_id;
+                $stock->in_quantity = $purchase->buying_quantity;
+                $stock->remaining_quantity = $product->quantity + $purchase->buying_quantity;
+                $stock->save();
+            }
+
+            // Update product quantity
+            $product_quantity = $product->quantity + $purchase->buying_quantity;
+            $product->update(['quantity' => $product_quantity]);
+        }
+
+        // Redirect back
+        return redirect()->route('purchases.index');
+    }
+
 }

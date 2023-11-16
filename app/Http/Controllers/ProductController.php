@@ -46,6 +46,7 @@ class ProductController extends Controller
         Product::create([
             'product_name' => $request['product_name'],
             'product_description' => $request['product_description'],
+            'product_cost' => $request['product_cost'],
             'product_price' => $request['product_price'],
             'unit_id' => $request['product_unit'],
             'category_id' => $request['product_category'],
@@ -94,6 +95,7 @@ class ProductController extends Controller
 
         $product->product_name = $request['product_name'];
         $product->product_description = $request['product_description'];
+        $product->product_cost = $request['product_cost'];
         $product->product_price = $request['product_price'];
         $product->unit_id = $request['product_unit'];
         $product->category_id = $request['product_category'];
@@ -118,6 +120,30 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('success', 'Product Removed Successfully!');
     }
+
+    public function getPrice($id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            // return the product price based on id sent through the request
+            return response()->json(['product_price' => $product->product_price]);
+        } catch (Exception $e) {
+            // Handle exceptions if the product is not found or other errors
+            return response()->json(['error' => 'Product not found'], 404);
+        }
+    }
+    public function getCost($id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            // return the product cost based on id sent through the request
+            return response()->json(['product_cost' => $product->product_cost]);
+        } catch (Exception $e) {
+            // Handle exceptions if the product is not found or other errors
+            return response()->json(['error' => 'Product not found'], 404);
+        }
+    }
+
 
     // public function opa($search=null)
     // {

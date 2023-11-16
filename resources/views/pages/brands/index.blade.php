@@ -12,7 +12,7 @@
             <div class="col-md-10">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Brand List</h6>
+                        <h4 class="m-0 font-weight-bold text-primary">Brand List</h4>
                         <a id="create-new" type="button" class="btn btn-primary float-right"
                             href="{{ route('brands.create') }}">Add New Brand</a>
                     </div>

@@ -22,7 +22,10 @@
                         <h6 class="m-0 font-weight-bold text-primary">Price: {{ $totalPrice }}</h6>
                     </div>
                     <div class="card-body">
-
+                        <div class="float-right">
+                            <a href="{{ route('purchases.approveAll', $purchases[0]->purchase_no) }}"
+                                class="btn btn-sm btn-success mx-2 py-2">Approve All</a>
+                        </div>
                         <div class="table-responsive pt-3 px-1">
                             <table class="table table-bordered cell-border" id="myTable">
                                 <thead>
@@ -34,9 +37,9 @@
                                         <th>Supplier</th>
                                         <th>Quantity</th>
                                         {{-- <th>Price</th> --}}
-                                        <th>Status</th>
-                                        {{-- <th>Status</th>
-                                        <th>Actions</th> --}}
+
+                                        {{-- <th>Status</th> --}}
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
 
@@ -50,7 +53,7 @@
                                             <td>{{ $purchase->supplier->supplier_name }}</td>
                                             <td>{{ $purchase->buying_quantity }}</td>
                                             {{-- <td class="text-center">{{ $purchase->buying_price }}</td> --}}
-                                            <td class="text-center">
+                                            {{-- <td class="text-center">
                                                 @if ($purchase->status == '0')
                                                     <span class="btn btn-warning"
                                                         style="pointer-events: none;">Pending</span>
@@ -58,6 +61,25 @@
                                                     <span class="btn btn-success"
                                                         style="pointer-events: none;">Approved</span>
                                                 @endif
+                                            </td> --}}
+                                            <td class="d-flex justify-content-evenly">
+                                                @if ($purchase->status == '0')
+                                                    <a class="btn btn-sm btn-danger mx-2 py-2"
+                                                        href="{{ route('purchases.destroy', $purchase->id) }}"
+                                                        onclick="return confirm('Are you sure?')">
+                                                        Delete
+                                                    </a>
+                                                    <a class="btn btn-sm btn-success mx-2 py-2" type="button"
+                                                        href="{{ route('purchases.approve', $purchase->id) }}"
+                                                        onclick="return confirm('Sure you want Approve this Purchase ?')">
+                                                        <i
+                                                            class="fa-regular fa-circle-check pt-0 pb-0 pr-0 pl-0 mr-0 ml-0"></i>
+                                                    </a>
+                                                @elseif ($purchase->status == '1')
+                                                    <span class="btn btn-sm btn-success mx-2 py-2"
+                                                        style="pointer-events: none;">Approved</span>
+                                                @endif
+
                                             </td>
                                             {{-- <td>
                                             @if ($purchase->status == '0')

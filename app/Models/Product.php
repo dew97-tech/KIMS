@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class Product extends Model
 {
     protected $primaryKey = 'id';
 
-    protected $fillable = ['product_name', 'product_description', 'category_id', 'brand_id', 'unit_id', 'product_price'];
+    protected $fillable = ['product_name', 'product_description', 'category_id', 'brand_id', 'unit_id', 'product_price', 'product_cost', 'quantity'];
 
     public function category()
     {

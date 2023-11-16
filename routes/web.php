@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\ExclusiveController;
+use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -42,6 +44,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/edit/{product}', 'ProductController@edit')->name('edit');
         Route::put('/{product}', 'ProductController@update')->name('update');
         Route::get('/delete/{product}', 'ProductController@destroy')->name('destroy');
+        Route::get('/get-product-price/{id}', 'ProductController@getPrice')->name('get-product-price');
+        Route::get('/get-product-cost/{id}', 'ProductController@getCost')->name('get-product-cost');
     });
 
     // Categories
@@ -104,11 +108,36 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/delete/{purchase}', 'PurchaseController@destroy')->name('destroy');
         Route::get('/pending', 'PurchaseController@pending')->name('pending');
         Route::get('/approve/{purchase}', 'PurchaseController@approve')->name('approve');
+        Route::get('/approveAll/{purchase}', 'PurchaseController@approveAll')->name('approveAll');
     });
 
-    // Exclusive Routes only For Making Purchase
+    // Orders
+    Route::group(['prefix' => 'orders', 'as' => 'orders.'], function () {
+        Route::get('/', 'OrderController@index')->name('index');
+        Route::get('/create', 'OrderController@create')->name('create');
+        Route::post('/store', 'OrderController@store')->name('store');
+        Route::get('/show/{order}', 'OrderController@show')->name('show');
+        Route::get('/delete/{order}', 'OrderController@destroy')->name('destroy');
+        Route::get('/pending', 'OrderController@pending')->name('pending');
+        Route::get('/approve/{order}', 'OrderController@approve')->name('approve');
+        Route::get('/approveAll/{order}', 'OrderController@approveAll')->name('approveAll');
+    });
+
+    // Customers
+    Route::group(['prefix' => 'customers', 'as' => 'customers.'], function () {
+        Route::get('/', 'CustomerController@index')->name('index');
+        Route::get('/create', 'CustomerController@create')->name('create');
+        Route::post('/store', 'CustomerController@store')->name('store');
+        Route::get('/edit/{customer}', 'CustomerController@edit')->name('edit');
+        Route::put('/{customer}', 'CustomerController@update')->name('update');
+        Route::get('/delete/{customer}', 'CustomerController@destroy')->name('destroy');
+    });
+
+    // Exclusive Routes only For Making Purchases and Orders
     Route::group([], function () {
         Route::get('/get-product', [ExclusiveController::class, 'GetProduct'])->name('get-product');
         Route::get('/get-supplier/{id}/name', [SupplierController::class, 'getName'])->name('get-supplier');
+
     });
+
 });

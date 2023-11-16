@@ -12,43 +12,40 @@
 @endpush
 
 @section("content")
-    <div class="container-fluid">
-
+    <div class="container">
         <div class="row">
-
             <div class="card">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"">
-                    <h4 class="m-0 font-weight-bold text-primary">Add Purchase</h4>
+                    <h4 class="m-0 font-weight-bold text-primary">Add Order</h4>
                 </div>
                 <div class="card-body">
 
                     <div class="row">
-                        {{-- Date --}}
+                        {{-- Order Date --}}
                         <div class="col-md-4">
                             <div class="md-3">
-                                <label for="date" class="pb-1 form-label font-weight-bold">Select Date</label>
-                                <input type="date" class="form-control" id="date" name="date"
+                                <label for="order_date" class="pb-1 form-label font-weight-bold">Select Order Date</label>
+                                <input type="date" class="form-control" id="order_date" name="order_date"
                                     max="{{ date("Y-m-d") }}">
                             </div>
                         </div>
-                        {{-- Purchase No --}}
+                        {{-- Order No --}}
                         <div class="col-md-4">
                             <div class="md-3">
-                                <label for="purchase_no" class="pb-1 form-label font-weight-bold">Purchase
-                                    No</label>
-                                <input type="text" class="form-control" id="purchase_no" name="purchase_no"
-                                    value="{{ $purchase_no }}" disabled>
+                                <label for="order_no" class="pb-1 form-label font-weight-bold">Order No</label>
+                                <input type="text" class="form-control" id="order_no" name="order_no"
+                                    value="{{ $order_no }}" disabled>
                             </div>
                         </div>
-                        {{-- Supplier ID --}}
+                        {{-- Customer Name --}}
                         <div class="col-md-4">
                             <div class="md-3">
-                                <label for="supplier_id" class="pb-1 form-label font-weight-bold">Supplier
-                                    Name</label>
-                                <select id='supplier_id' name='supplier_id' class='form-control' required>
-                                    <option value="">Select Supplier</option>
-                                    @foreach ($suppliers as $supplier)
-                                        <option value="{{ $supplier->id }}">{{ $supplier->supplier_name }}</option>
+                                <label for="customer_id" class="pb-1 form-label font-weight-bold">Customer Name</label>
+                                <select id='customer_id' name='customer_id' class='select form-control'
+                                    data-mdb-filter="true" required>
+                                    <option value="">Select Customer</option>
+                                    @foreach ($customers as $customer)
+                                        <option value="{{ $customer->id }}">{{ $customer->customer_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -56,24 +53,19 @@
                     </div>
 
                     {{-- End Card Body --}}
-
-
-
                     <hr>
-
-                    {{-- Dyanmic Table Row --}}
-                    <form action="{{ route("purchases.store") }}" method="post" class="form"
-                        enctype="multipart/form-data">
+                    {{-- Dynamic Table Row --}}
+                    <form action="{{ route("orders.store") }}" method="post" class="form" enctype="multipart/form-data">
                         @csrf
                         <div class="table-responsive">
                             <table class="table-sm table-bordered" width="100%" style="border-color: #dddddd">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">Product Name</th>
-                                        <th class="text-center">Unit</th>
-                                        <th class="text-center">Per Unit Cost</th>
-                                        <th class="text-center">Cost</th>
-                                        <th class="text-center">Add</th>
+                                        <th class="text-start">Product Name</th>
+                                        <th class="text-start">Quantity</th>
+                                        <th class="text-start">Per Unit Price</th>
+                                        <th class="text-start">Total Amount</th>
+                                        <th class="text-start">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="addRow" class="addRow">
@@ -89,22 +81,22 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        {{-- Unit --}}
+                                        {{-- Quantity --}}
                                         <td class="text-center">
-                                            <input id="buying_quantity" type="number"
-                                                class="form-control buying_quantity text-right" name="buying_quantity[]">
+                                            <input id="quantity" type="number" class="form-control quantity text-right"
+                                                name="quantity[]" min="1">
                                         </td>
-                                        {{-- Per Unit Cost --}}
+                                        {{-- Product Price --}}
                                         <td class="text-center">
-                                            <input id="unit_price" type="number" class="form-control unit_price text-right"
-                                                name="unit_price[]">
+                                            <input id="product_price" type="number" step="0.01"
+                                                class="form-control product_price text-right" name="product_price[]">
                                         </td>
-                                        {{-- Buying Price === Product Cost --}}
+                                        {{-- Total Amount --}}
                                         <td class="text-center">
-                                            <input type="number" class="form-control buying_price" id="buying_price"
-                                                step="0.01" placeholder="0.00" name="buying_price[]"
-                                                value="@{{ buying_price }}" readonly>
+                                            <input type="number" class="form-control text-start total_amount"
+                                                id="total_amount" placeholder="0.00" name="total_amount[]" readonly>
                                         </td>
+                                        {{-- Action --}}
                                         <td class="text-center">
                                             <button type="button" class="btn btn-md btn-primary addeventmore rounded-pill"
                                                 id="addeventmore">
@@ -115,36 +107,32 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="3" class="p-3 text-right font-weight-bold">Total Cost:</td>
-                                        <td class="p-3 text-left">
+                                        <td colspan="3" class="p-3 text-right font-weight-bold">Grand Total:</td>
+                                        <td class="text-left">
                                             <input type="text" name="estimated_amount" value="0.00"
-                                                id="estimated_amount" class="form-control estimated_amount" readonly>
+                                                id="estimated_amount" class="form-control text-start estimated_amount"
+                                                readonly>
                                         </td>
                                         <td></td>
                                     </tr>
                                 </tfoot>
                             </table>
+
                         </div>
                         <div class="form-group my-2 text-end">
-                            <button type="submit" class="btn btn-success mt-4 " id="storeButton">Purchase Now</button>
+                            <button type="submit" class="btn btn-success mt-4" id="storeButton">Create Order</button>
                         </div>
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
 
+    {{-- End Dynamic Table Row --}}
+    <!-- Include jQuery library if not already included -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-
-    {{-- End Dyanmic Table Row --}}
-
-
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-
+    {{-- Handlebar --}}
     <script>
         $(document).ready(function() {
 
@@ -155,14 +143,14 @@
                 if (product_id) {
                     // Use jQuery ajax to make an AJAX request to get the product price based on the selected product_id
                     $.ajax({
-                        url: '/products/get-product-cost/' + product_id,
+                        url: '/products/get-product-price/' + product_id,
                         type: 'GET',
                         dataType: 'json',
                         success: function(data) {
-                            if (data && data.product_cost) {
-                                row.find('.unit_price').val(data.product_cost);
+                            if (data && data.product_price) {
+                                row.find('.product_price').val(data.product_price);
                             } else {
-                                row.find('.unit_price').val('');
+                                row.find('.product_price').val('');
                             }
                         },
                         error: function(e) {
@@ -170,7 +158,7 @@
                         }
                     });
                 } else {
-                    row.find('.unit_price').val('');
+                    row.find('.product_price').val('');
                 }
             });
 
@@ -179,30 +167,34 @@
     </script>
 
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script id="document-template" type="text/x-handlebars-template">
-        <tr class="delete_add_more_item" id="delete_add_more_item">
-            <input type="hidden" name="date[]"  value="@{{ date }}">
-            <input type="hidden" name="purchase_no[]"  value="@{{ purchase_no }}">
-            <input type="hidden" name="supplier_id[]"  value="@{{ supplier_id }}">
-            <td class="text-center font-bold">
-                <input type="hidden" name="product_id_val[]" value="@{{ product_id_val }}">@{{ product_name }}
-            </td>
-            <td class="text-center">
-                <input type="number" min="1" class="form-control form-control text-center buying_quantity"
-                    name="buying_quantity_val[]" value="@{{ buying_quantity_val }}" readonly>
-            </td>
-            <td class="text-center">
-                <input type="number" min="1" class="form-control form-control text-center unit_price" name="unit_price_val[]"
-                    value="@{{ unit_price_val }}" readonly>
-            </td>
-            <td class="text-center">
-                <input type="number" class="form-control text-center buying_price" id="buying_price" name="buying_price_val[]" value="@{{ buying_price_val }}" readonly>
-            </td>
-            <td class="text-center" colspan="2">
-                <button type="button" class="btn btn-md btn-danger removeeventmore py-2" id="removeeventmore"><i class="fa-regular fa-trash-can fa-xl mt-0 mb-0 pt-1"></i></button>
-            </td>
-        </tr>
+    <tr class="delete_add_more_item" id="delete_add_more_item">
+            <input type="hidden" name="order_no_val[]" class="order_no" value="@{{ order_no_val }}">
+            <input type="hidden" name="customer_name_val[]" class="customer_name" value="@{{ customer_name_val }}">
+            <input type="hidden" name="customer_id_val[]" class="customer_id" value="@{{ customer_id_val }}">
+            <input type="hidden" name="order_date_val[]" class="order_date" value="@{{ order_date_val }}">
+            <input type="hidden" name="product_name_val[]" class="product_name" value="@{{ product_name_val }}">
+        <td class="text-center font-bold">
+            <input type="hidden" name="product_id_val[]" class="product_id" value="@{{ product_id_val }}">@{{ product_name_val }}
+        </td>
+        <td class="text-center">
+            <input type="number" min="1" class="form-control form-control text-center quantity"
+                name="quantity_val[]" value="@{{ quantity_val }}">
+        </td>
+        <td class="text-center">
+            <input type="number" min="0" step="0.01" class="form-control form-control text-center product_price"
+                name="product_price_val[]" id="product_price" value="@{{ product_price_val }}" readonly>
+        </td>
+        <td class="text-center">
+            <input type="text" class="form-control form-control text-center total_amount"
+                name="total_amount_val[]" id="total_amount" value="@{{ total_amount_val }}" readonly>
+        </td>
+        <td class="text-center" colspan="2">
+            <button type="button" class="btn btn-md btn-danger removeeventmore py-2" id="removeeventmore">
+                <i class="fa-regular fa-trash-can fa-xl mt-0 mb-0 pt-1"></i>
+            </button>
+        </td>
+    </tr>
     </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -210,116 +202,112 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $(document).on("click", ".addeventmore", function() {
-                var date = $('#date').val();
-                var purchase_no = $('#purchase_no').val();
-                var supplier_id = $('#supplier_id').val();
-                var supplier_name = $('#supplier_id').find('option:selected').text();
+                var order_date = $('#order_date').val();
+                var order_no = $('#order_no').val();
+                var customer_id = $('#customer_id').val();
+                var customer_name = $('#customer_id').find('option:selected').text();
                 var product_id = $('#product_id').val();
                 var product_name = $('#product_id').find('option:selected').text();
-                var unit_price = $('#unit_price').val();
-                var buying_quantity = $('#buying_quantity').val();
-                var buying_price = (unit_price * buying_quantity).toFixed(2);
+                var quantity = $('#quantity').val();
+                var product_price = $('#product_price').val();
+                var total_amount = (quantity * product_price).toFixed(2);
 
                 // Store the values of input fields in separate variables
-                var unit_price_val = unit_price;
-                var buying_quantity_val = buying_quantity;
-                var buying_price_val = buying_price;
+                var order_date_val = order_date;
+                var order_no_val = order_no;
                 var product_id_val = product_id;
-                console.log(buying_quantity_val);
-                if (date == '') {
-                    $.notify("Date is Required", {
+                var product_name_val = product_name;
+                var quantity_val = quantity;
+                var product_price_val = product_price;
+                var total_amount_val = total_amount;
+                var customer_id_val = customer_id;
+                var customer_name_val = customer_name;
+                if (order_date == '') {
+                    $.notify("Order Date is Required", {
                         globalPosition: 'top right',
-                        className: 'error'
+                        className: 'error',
+
                     });
                     return false;
                 }
-                if (purchase_no == '') {
-                    $.notify("Purchase No is Required", {
-                        globalPosition: 'top right',
-                        className: 'error'
-                    });
-                    return false;
-                }
-                if (supplier_id == '') {
-                    $.notify("Supplier is Required", {
+                if (customer_id == '') {
+                    $.notify("Customer Name is Required", {
                         globalPosition: 'top right',
                         className: 'error'
                     });
                     return false;
                 }
                 if (product_id == '') {
-                    $.notify("Product Field is Required", {
+                    $.notify("Product is Required", {
                         globalPosition: 'top right',
                         className: 'error'
                     });
                     return false;
                 }
-                if (buying_quantity == '') {
-                    $.notify("Buying Quantity Field is Required", {
+                if (product_name == '') {
+                    $.notify("Product Name is Required", {
                         globalPosition: 'top right',
                         className: 'error'
                     });
                     return false;
                 }
-                if (unit_price == '') {
-                    $.notify("Cost Field is Required", {
+                if (quantity == '') {
+                    $.notify("Quantity is Required", {
                         globalPosition: 'top right',
                         className: 'error'
                     });
                     return false;
                 }
+                if (product_price == '') {
+                    $.notify("Product Price is Required", {
+                        globalPosition: 'top right',
+                        className: 'error'
+                    });
+                    return false;
+                }
+
+                total_amount = (parseFloat(quantity) * parseFloat(product_price)).toFixed(2);
+
                 var source = $("#document-template").html();
-                var tamplate = Handlebars.compile(source);
+                var template = Handlebars.compile(source);
                 var data = {
-                    date: date,
-                    purchase_no: purchase_no,
-                    supplier_id: supplier_id,
-                    supplier_name: supplier_name,
-                    product_id_val: product_id_val,
-                    product_name: product_name,
-                    unit_price_val: unit_price_val,
-                    buying_quantity_val: buying_quantity_val,
-                    buying_price_val: buying_price_val
+                    order_date_val: order_date,
+                    order_no_val: order_no,
+                    product_id_val: product_id,
+                    product_name_val: product_name,
+                    quantity_val: quantity,
+                    product_price_val: product_price,
+                    total_amount_val: total_amount,
+                    customer_id_val: customer_id,
+                    customer_name_val: customer_name,
                 };
-                var html = tamplate(data);
+                var html = template(data);
                 console.log(data);
                 $("#addRow").append(html);
-                $('#unit_price').val('');
-                $('#buying_quantity').val('');
-                $('#buying_price').val('');
+                $('#quantity').val('');
                 $('#product_id').val('');
-
+                $('#product_price').val('');
+                $('#total_amount').val('');
+                totalAmountPrice();
             });
 
             $(document).on("click", ".removeeventmore", function(event) {
                 $(this).closest(".delete_add_more_item").remove();
                 totalAmountPrice();
             });
-            $(document).on("keyup", '.unit_price,.buying_quantity', function() {
-                var unit_price = $(this).closest("tr").find("input.unit_price").val();
 
-                var qty = $(this).closest("tr").find("input.buying_quantity").val();
-                buying_price = unit_price * qty;
-                $(this).closest("tr").find("input.buying_price").val(buying_price.toFixed(2));
+            $(document).on("keyup", '.quantity, .product_price', function() {
+                var row = $(this).closest("tr");
+                var quantity = row.find(".quantity").val();
+                var product_price = row.find(".product_price").val();
+                var total_amount = (parseFloat(quantity) * parseFloat(product_price)).toFixed(2);
+                row.find(".total_amount").val(total_amount);
                 totalAmountPrice();
             });
-            // $(document).ready(function() {
-            //     let totalPrice = 0;
-
-            //     $('#addeventmore').click(function() {
-            //         var unitPrice = parseFloat($('#unit_price').val());
-            //         var quantity = parseInt($('#buying_quantity').val());
-            //         var buyingPrice = (unitPrice * quantity);
-            //         totalPrice += buyingPrice;
-            //         console.log('buyingPrice:', buyingPrice);
-            //         console.log('EstimatedPrice:', totalPrice);
-            //         $('#estimated_amount').val(totalPrice.toFixed(2));
-            //     });
-            // });
 
             function totalAmountPrice() {
                 var sum = 0;
-                $(".buying_price").each(function() {
+                $(".total_amount").each(function() {
                     var value = $(this).val();
                     if (!isNaN(value) && value.length != 0) {
                         sum += parseFloat(value);

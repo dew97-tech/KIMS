@@ -1,10 +1,10 @@
-@extends('layouts.app')
+@extends("layouts.app")
 
-@push('header-script')
+@push("header-script")
     <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
 @endpush
 
-@section('content')
+@section("content")
     <div class="container">
 
         <div class="card ">
@@ -12,35 +12,49 @@
                 <h4 class="m-0 font-weight-bold text-primary">Create Product</h4>
             </div>
             <div class="card-body p-4">
-                <form action="{{ route('products.store') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route("products.store") }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group row mb-3">
-                        <label for="product_name" class="form-label">Product Name <span class="text-danger">*</span></label>
+                        <label for="product_name" class="pb-1 form-label font-weight-bold">Product Name <span
+                                class="text-danger">*</span></label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="product_name" name="product_name" required>
                         </div>
                     </div>
 
                     <div class="form-group row mb-3">
-                        <label for="product_description" class="form-label">Product Description <span
+                        <label for="product_description" class="pb-1 form-label font-weight-bold">Product Description <span
                                 class="text-danger">*</span></label>
                         <div class="input-group">
                             <textarea class="form-control rounded" id="product_description" name="product_description"></textarea>
                         </div>
                     </div>
-
+                    {{-- Product Price --}}
                     <div class="form-group row mb-3">
-                        <label for="product_price" class="form-label">Product Price <span
+                        <label for="product_price" class="pb-1 form-label font-weight-bold">Product Price <span
                                 class="text-danger">*</span></label>
                         <div class="input-group">
                             {{-- <span class="input-group-text">$</span> --}}
-                            <input type="number" class="form-control " id="product_price" name="product_price" required>
+                            <input type="number" step="0.01" class="form-control " id="product_price"
+                                name="product_price" required>
+                        </div>
+                    </div>
+
+                    {{-- Product Cost --}}
+                    <div class="form-group row mb-3">
+                        <label for="product_cost" class="pb-1 form-label font-weight-bold">Product Cost <span
+                                class="text-danger">*</span></label>
+                        <div class="input-group">
+                            {{-- <span class="input-group-text">$</span> --}}
+                            <input type="number" step="0.01" class="form-control " id="product_cost" name="product_cost"
+                                required>
                         </div>
                     </div>
 
                     {{-- Categories --}}
                     <div class="form-group row mb-3">
-                        <label for="product_category" class="form-label">Category <span class="text-danger">*</span></label>
+                        <label for="product_category" class="pb-1 form-label font-weight-bold">Category <span
+                                class="text-danger">*</span></label>
                         <div class="input-group">
                             <select id='product_category' name='product_category' class='form-control ' required>
                                 <option value="">Select Category</option>
@@ -53,7 +67,8 @@
 
                     {{-- Brands --}}
                     <div class="form-group row mb-3">
-                        <label for="product_brand" class="form-label">Brand <span class="text-danger">*</span></label>
+                        <label for="product_brand" class="pb-1 form-label font-weight-bold">Brand <span
+                                class="text-danger">*</span></label>
                         <div class="input-group">
                             <select id='product_brand' name='product_brand' class='form-control ' required>
                                 <option value="">Select Brand </option>
@@ -68,7 +83,8 @@
 
                     {{-- Units --}}
                     <div class="form-group row mb-5">
-                        <label for="product_unit" class="form-label">Unit <span class="text-danger">*</span></label>
+                        <label for="product_unit" class="pb-1 form-label font-weight-bold">Unit <span
+                                class="text-danger">*</span></label>
                         <div class="input-group">
                             <select id='product_unit' name='product_unit' class='form-control ' required>
                                 <option value="">Select Unit</option>
@@ -87,6 +103,6 @@
         </div>
     @endsection
 
-    @push('plugin-scripts')
+    @push("plugin-scripts")
         <!-- Plugin js import here -->
     @endpush

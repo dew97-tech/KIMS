@@ -21,6 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'products', 'as' => 'products.'], function () {
     Route::get('/opa/{search?}', 'ProductController@opA')->name('opa');
     Route::get('/opb/{search?}', 'ProductController@opB')->name('opb');
+
 });
 
 Route::group(['prefix' => 'ideas', 'as' => 'ideas.'], function () {

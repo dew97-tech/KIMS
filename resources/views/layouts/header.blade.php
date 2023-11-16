@@ -1,5 +1,5 @@
 <div class="c-wrapper">
-    <header class="c-header c-header-light c-header-fixed c-header-with-subheader">
+    <header class="c-header c-header-light c-header-fixed c-header-with-subheader py-1">
         <button class="c-header-toggler c-class-toggler d-lg-none mr-auto" type="button" data-target="#sidebar"
             data-class="c-sidebar-show">
             <span class="c-header-toggler-icon"></span>
@@ -12,7 +12,7 @@
             <li class="c-header-nav-item dropdown"><a class="c-header-nav-link" data-toggle="dropdown" href="#"
                     role="button" aria-haspopup="true" aria-expanded="false">
                     <div class="c-avatar">
-                        <img class="c-avatar-img" src="{{ asset('assets/img/default_user_image.png') }}" alt="">
+                        <img class="c-avatar-img" src="{{ asset("assets/img/default_user_image.png") }}" alt="">
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right pt-0">
@@ -24,36 +24,22 @@
                 <svg class="c-icon mr-2">
                   <use xlink:href="{{ url('/icons/sprites/free.svg#cil-settings') }}"></use>
                 </svg> Settings</a> --}}
-                    <a class="dropdown-item" href="{{ route('users.changePassword', auth()->user()->id) }}">
+                    <a class="dropdown-item" href="{{ route("users.changePassword", auth()->user()->id) }}">
                         <svg class="c-icon mr-2">
-                            <use xlink:href="{{ url('/icons/sprites/free.svg#cil-settings') }}"></use>
+                            <use xlink:href="{{ url("/icons/sprites/free.svg#cil-settings") }}"></use>
                         </svg>
                         Change Password
                     </a>
-                    <a class="dropdown-item" href="{{ url('/logout') }}"
+                    <a class="dropdown-item" href="{{ url("/logout") }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <svg class="c-icon mr-2">
-                            <use xlink:href="{{ url('/icons/sprites/free.svg#cil-account-logout') }}"></use>
+                            <use xlink:href="{{ url("/icons/sprites/free.svg#cil-account-logout") }}"></use>
                         </svg>
                         Logout
-                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">@csrf
+                        <form id="logout-form" action="{{ url("/logout") }}" method="POST" style="display: none;">@csrf
                         </form>
                     </a>
                 </div>
             </li>
         </ul>
-        {{-- <div class="c-subheader px-3">
-          <ol class="breadcrumb border-0 m-0">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <?php $segments = ''; ?>
-            @for ($i = 1; $i <= count(Request::segments()); $i++)
-                <?php $segments .= '/' . Request::segment($i); ?>
-                @if ($i < count(Request::segments()))
-                    <li class="breadcrumb-item">{{ Request::segment($i) }}</li>
-                @else
-                    <li class="breadcrumb-item active">{{ Request::segment($i) }}</li>
-                @endif
-            @endfor
-          </ol>
-        </div> --}}
     </header>

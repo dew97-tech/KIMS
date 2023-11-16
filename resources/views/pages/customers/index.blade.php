@@ -1,20 +1,20 @@
-@extends('layouts.app')
+@extends("layouts.app")
 
-@section('title', 'Products')
+@section("title", "Customers")
 
-@push('plugin-styles')
+@push("plugin-styles")
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.css">
 @endpush
 
-@section('content')
-    <div id="learnings" class="container">
+@section("content")
+    <div id="customers" class="container">
         <div class="row justify-content-md-center">
             <div class="col-md-10">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h4 class="m-0 font-weight-bold text-primary">Category List</h4>
+                        <h4 class="m-0 font-weight-bold text-primary">Customer List</h4>
                         <a id="create-new" type="button" class="btn btn-primary float-right"
-                            href="{{ route('categories.create') }}">Add New Category</a>
+                            href="{{ route("customers.create") }}">Add New Customer</a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive pt-3 px-1">
@@ -22,29 +22,29 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Category Name</th>
-                                        <th>Parent Category</th>
+                                        <th>Customer Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Address</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    @foreach ($categories as $index => $category)
+                                    @foreach ($customers as $index => $customer)
                                         <tr>
-                                            {{-- {{ dd($product->brand) }} --}}
                                             <td>{{ $index + 1 }}</td>
-                                            <td>{{ $category->category_name }}</td>
-                                            {{-- <td>{{ $category->parent_category_id}}</td> --}}
-                                            <td>{{ $category->parentCategory ? $category->parentCategory->category_name : 'No Parent Category' }}
-                                            </td>
+                                            <td>{{ $customer->customer_name }}</td>
+                                            <td>{{ $customer->customer_email }}</td>
+                                            <td>{{ $customer->customer_phone }}</td>
+                                            <td>{{ $customer->customer_address }}</td>
                                             <td class="text-center">
-
                                                 <a class="btn btn-warning btn-sm mx-2 py-2"
-                                                    href="{{ route('categories.edit', $category->id) }}">
+                                                    href="{{ route("customers.edit", $customer->id) }}">
                                                     <span class="glyphicon glyphicon-edit">Edit</span>
                                                 </a>
                                                 <a class="btn btn-danger btn-sm mx-2 py-2"
-                                                    href="{{ route('categories.destroy', $category->id) }}"
+                                                    href="{{ route("customers.destroy", $customer->id) }}"
                                                     onclick="return confirm('Are you sure?')">
                                                     <span class="glyphicon glyphicon-trash">Delete</span>
                                                 </a>
@@ -62,7 +62,7 @@
 
 @endsection
 
-@push('plugin-scripts')
+@push("plugin-scripts")
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.js"></script>
@@ -74,6 +74,6 @@
     </script>
 @endpush
 
-@push('custom-scripts')
+@push("custom-scripts")
     <!-- Custom js here -->
 @endpush
